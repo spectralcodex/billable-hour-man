@@ -23,7 +23,6 @@ To run your application:
 == Help
 
 Rest API running on port 8888
-Sample:
 ```
 https://localhost:8888/api/v1
 ```
