@@ -22,9 +22,18 @@ To run your application:
 
 == Help
 
-* https://vertx.io/docs/[Vert.x Documentation]
-* https://stackoverflow.com/questions/tagged/vert.x?sort=newest&pageSize=15[Vert.x Stack Overflow]
-* https://groups.google.com/forum/?fromgroups#!forum/vertx[Vert.x User Group]
-* https://gitter.im/eclipse-vertx/vertx-users[Vert.x Gitter]
+Rest API running on port 8888
+Sample:
+```
+https://localhost:8888/api/v1
+```
+
+Finance WebApp running on port 9999
+```
+https://localhost:9999
+```
+
+==API doc
+* https://groups.google.com/forum/?fromgroups#!forum/vertx[Postman Doc]
 
 
