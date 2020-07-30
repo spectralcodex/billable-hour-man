@@ -10,9 +10,9 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.BodyHandler
 
-class RestVerticle (service: ApiPersistService): BaseRestVerticle(){
+internal class RestVerticle (service: PersistProxyService): BaseRestVerticle(){
   private val logger = LoggerFactory.getLogger(this::class.java)
-  private val service: ApiPersistService = service
+  private val service: PersistProxyService = service
   private val  serviceName:String = "billable-rest-api"
 
 
@@ -31,7 +31,7 @@ class RestVerticle (service: ApiPersistService): BaseRestVerticle(){
     val apiRouter: Router = Router.router(vertx)
     apiRouter.post("/add").handler(this::serviceAdd)
     apiRouter.post("/find")
-    apiRouter.post(":/empId")
+    apiRouter.post("/:empId")
     router.mountSubRouter("/api", apiRouter)
 
     val host: String = config().getString("service.http.address", "0.0.0.0")
@@ -41,7 +41,6 @@ class RestVerticle (service: ApiPersistService): BaseRestVerticle(){
     createHttpServer(router, host, port)
       .compose{publishHttpEndpoint(serviceName, host, port)}
       .onComplete(startPromise)
-
   }
 
   private fun serviceAdd(context: RoutingContext) {

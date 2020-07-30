@@ -13,13 +13,16 @@ class FinanceServiceVerticle : AbstractVerticle(){
           .putHeader("content-type", "text/plain")
           .end("Hello from Vert.x!")
       }
-      .listen(8888) { http ->
+      .listen(8888, "0.0.0.0") { http ->
         if (http.succeeded()) {
           startPromise.complete()
-          println("HTTP server started on port 8888")
+          println("Admin server started on port 8888")
         } else {
           startPromise.fail(http.cause())
         }
       }
+    /*vertx.createHttpServer().requestHandler { req -> req.response()
+      .putHeader("content-type", "text/plain")
+      .end("Hello from Vert.x!")}.listen(8888,"0.0.0.0")*/
   }
 }

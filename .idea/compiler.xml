@@ -2,15 +2,17 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+      <profile name="Annotation profile for billable-hour-man" enabled="true">
+        <sourceOutputDir name="src/main/generated" />
+        <sourceTestOutputDir name="src/test/generated" />
         <outputRelativeToContentRoot value="true" />
+        <option name="codegen.output" value="$PROJECT_DIR$/src/main" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
         <module name="billable-hour-man" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="billable-hour-man" target="1.5" />
+      <module name="billable-hour-man" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

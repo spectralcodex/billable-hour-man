@@ -8,7 +8,7 @@ class ConfigHelper {
 
   companion object {
     fun loadSqlQueries(): HashMap<SqlQuery, String> {
-      val queriesInputStream = javaClass.getResourceAsStream("/db-queries.properties")
+      val queriesInputStream = this::class.java.getResourceAsStream("/db-queries.properties")
       val queriesProps = Properties()
       queriesProps.load(queriesInputStream)
       queriesInputStream.close()
@@ -19,13 +19,11 @@ class ConfigHelper {
       )
     }
 
-    fun loadConfig(config: JsonObject):JsonObject{
-      val dbConfig =  JsonObject()
+    fun loadConfig():JsonObject{
+      return JsonObject()
         .put("url", "jdbc:hsqldb:file:db/wiki")
         .put("driver_class", "org.hsqldb.jdbcDriver")
         .put("max_pool_size", 30)
-
-      return config?.mergeIn(dbConfig)
     }
   }
 }

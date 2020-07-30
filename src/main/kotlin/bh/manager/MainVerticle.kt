@@ -32,15 +32,15 @@ class MainVerticle : AbstractVerticle() {
     vertx.deployVerticle(ApiPersistServiceVerticle(), apiPromise)
 
     apiPromise.future().compose {
-      logger.info("ApiOk result -->$it")
+      logger.info("Api Ok id-->$it")
 
       val adminPromise = Promise.promise<String>()
-      vertx.deployVerticle(FinanceServiceVerticle(), DeploymentOptions().setInstances(2),
+      vertx.deployVerticle(FinanceServiceVerticle(),
         adminPromise)
       return@compose adminPromise.future()
     }.onComplete { ar ->
       if (ar.succeeded()) {
-        logger.info("Hurray server up \uD83E\uDD23")
+        logger.info("Hurray we are up \uD83D\uDE80")
         startPromise.complete()
       } else {
         logger.info("\uD83E\uDD23 OOps server failed to start -->${ar.cause()}")

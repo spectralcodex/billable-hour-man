@@ -12,7 +12,10 @@ class TestMainVerticle {
 
   @BeforeEach
   fun deploy_verticle(vertx: Vertx, testContext: VertxTestContext) {
+    //vertx.deployVerticle(bh.manager.service.api.ApiPersistServiceVerticle(), testContext.succeeding<String> { _ -> testContext.completeNow() })
+    //vertx.deployVerticle(bh.manager.service.admin.FinanceServiceVerticle(), testContext.succeeding<String> { _ -> testContext.completeNow() })
     vertx.deployVerticle(MainVerticle(), testContext.succeeding<String> { _ -> testContext.completeNow() })
+
   }
 
   @Test

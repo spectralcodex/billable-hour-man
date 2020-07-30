@@ -14,22 +14,23 @@ import io.vertx.ext.sql.SQLConnection
  */
 
 open class JdbcRepositoryWrapper(vertx: Vertx, config: JsonObject) {
-  private val client: JDBCClient = JDBCClient.create(vertx, config)
+  val client: JDBCClient = JDBCClient.createShared(vertx, config).also { print(config) }
   private val logger = LoggerFactory.getLogger(this::class.java)
+
   /**
    * A helper methods that generates jooq.async handler for SQLConnection
    *
    * @return generated handler
    */
-   fun <T> connHandler(h1: Handler<AsyncResult<T>>,
-                                h2: Handler<SQLConnection>): Handler<AsyncResult<SQLConnection>> {
+  fun <T> connHandler(h1: Handler<AsyncResult<T>>,
+                      h2: Handler<SQLConnection>): Handler<AsyncResult<SQLConnection>> {
     return Handler { conn ->
-        if (conn.succeeded()) {
-          val connection: SQLConnection = conn.result()
-          h2.handle(connection)
-        } else {
-          h1.handle(Future.failedFuture(conn.cause()))
-        }
+      if (conn.succeeded()) {
+        val connection: SQLConnection = conn.result()
+        h2.handle(connection)
+      } else {
+        h1.handle(Future.failedFuture(conn.cause()))
+      }
     }
   }
 
@@ -38,34 +39,49 @@ open class JdbcRepositoryWrapper(vertx: Vertx, config: JsonObject) {
     client.getConnection(promise)
     return promise.future()
   }
+
   /**
    * @param params        JsonArray containing query parameters
    * @param sql           query
    * @param resultHandler results
    */
-  protected fun executeNoResult(params:JsonArray, sql:String, resultHandler: Handler<AsyncResult<Unit>>) {
+  protected fun executeNoResult(params: JsonArray, sql: String, resultHandler: Handler<AsyncResult<Void>>) {
     client.getConnection(connHandler(resultHandler, Handler { con ->
-    con.queryWithParams(sql, params) { r ->  //if returns then fix return json array
-      if (r.succeeded()) {
-        resultHandler.handle(Future.succeededFuture())
-      } else {
-        resultHandler.handle(Future.failedFuture(r.cause()))
+      con.queryWithParams(sql, params) { r ->  //if returns then fix return json array
+        if (r.succeeded()) {
+          resultHandler.handle(Future.succeededFuture())
+        } else {
+          resultHandler.handle(Future.failedFuture(r.cause()))
+        }
+        con.close()
       }
-      con.close()
-    }
+    }))
+  }
+
+  protected fun <T> executeNoResult(t: T, sql: String, resultHandler: Handler<AsyncResult<Void>>) {
+    client.getConnection(connHandler(resultHandler, Handler { con ->
+      con.execute(sql) { r ->  //if returns then fix return json array
+        if (r.succeeded()) {
+          resultHandler.handle(Future.succeededFuture())
+          logger.info("Persist OK --> id:$t")
+        } else {
+          resultHandler.handle(Future.failedFuture(r.cause()))
+        }
+        con.close()
+      }
     }))
   }
 
   protected fun removeAll(sql: String, resultHandler: Handler<AsyncResult<Unit>>) {
     client.getConnection(connHandler(resultHandler, Handler { con ->
-        con.query(sql) { r ->
-          if (r.succeeded()) {
-            resultHandler.handle(Future.succeededFuture())
-          } else {
-            resultHandler.handle(Future.failedFuture(r.cause()))
-          }
-          con.close()
+      con.query(sql) { r ->
+        if (r.succeeded()) {
+          resultHandler.handle(Future.succeededFuture())
+        } else {
+          resultHandler.handle(Future.failedFuture(r.cause()))
         }
+        con.close()
+      }
     }))
   }
 
@@ -109,19 +125,20 @@ open class JdbcRepositoryWrapper(vertx: Vertx, config: JsonObject) {
     }
   }
 
-  protected fun <T>  retrieveNone(t: T, sql: String):Future<Void> {
+  protected fun <T> retrieveNone(t: T, sql: String): Future<Void> {
     return getConnection().compose { con ->
-      val promise:Promise<Void> = Promise.promise()
+      logger.info("Creating db:::::Init!!!!!!$sql")
+      val promise: Promise<Void> = Promise.promise()
       con.execute(sql) { ar ->
-      if (ar.succeeded()) {
-        logger.info("Persist OK --> id:$t")
-        promise.complete()
-      } else {
-        promise.fail(ar.cause())
+        if (ar.succeeded()) {
+          logger.info("Persist OK --> id:$t")
+          promise.complete()
+        } else {
+          promise.fail(ar.cause())
+        }
+        con.close()
       }
-      con.close()
-    }
-     return@compose promise.future()
+      return@compose promise.future()
     }
   }
 
