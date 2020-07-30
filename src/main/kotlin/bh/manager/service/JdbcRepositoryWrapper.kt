@@ -3,6 +3,7 @@ package bh.manager.service
 import io.vertx.core.*
 import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
+import io.vertx.core.logging.LoggerFactory
 import io.vertx.ext.jdbc.JDBCClient
 import io.vertx.ext.sql.SQLConnection
 
@@ -13,8 +14,8 @@ import io.vertx.ext.sql.SQLConnection
  */
 
 open class JdbcRepositoryWrapper(vertx: Vertx, config: JsonObject) {
-   var client: JDBCClient = JDBCClient.create(vertx, config)
-
+  private val client: JDBCClient = JDBCClient.create(vertx, config)
+  private val logger = LoggerFactory.getLogger(this::class.java)
   /**
    * A helper methods that generates jooq.async handler for SQLConnection
    *
@@ -108,5 +109,20 @@ open class JdbcRepositoryWrapper(vertx: Vertx, config: JsonObject) {
     }
   }
 
+  protected fun <T>  retrieveNone(t: T, sql: String):Future<Void> {
+    return getConnection().compose { con ->
+      val promise:Promise<Void> = Promise.promise()
+      con.execute(sql) { ar ->
+      if (ar.succeeded()) {
+        logger.info("Persist OK --> id:$t")
+        promise.complete()
+      } else {
+        promise.fail(ar.cause())
+      }
+      con.close()
+    }
+     return@compose promise.future()
+    }
+  }
 
 }

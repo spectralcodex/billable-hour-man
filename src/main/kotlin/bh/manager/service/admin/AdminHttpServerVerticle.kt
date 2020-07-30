@@ -1,4 +1,4 @@
-package bh.manager.http
+package bh.manager.service.admin
 
 class AdminHttpServerVerticle {
 }

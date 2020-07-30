@@ -1,6 +1,7 @@
-package bh.manager.service.config
+package bh.manager.util
 
 import bh.manager.service.SqlQuery
+import io.vertx.core.json.JsonObject
 import java.util.*
 
 class ConfigHelper {
@@ -16,6 +17,15 @@ class ConfigHelper {
         SqlQuery.ALL_PAGES to queriesProps.getProperty("all-pages"),
         SqlQuery.CREATE_PAGE to queriesProps.getProperty("create-page")
       )
+    }
+
+    fun loadConfig(config: JsonObject):JsonObject{
+      val dbConfig =  JsonObject()
+        .put("url", "jdbc:hsqldb:file:db/wiki")
+        .put("driver_class", "org.hsqldb.jdbcDriver")
+        .put("max_pool_size", 30)
+
+      return config?.mergeIn(dbConfig)
     }
   }
 }

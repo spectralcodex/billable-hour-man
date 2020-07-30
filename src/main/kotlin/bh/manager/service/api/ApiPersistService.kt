@@ -1,6 +1,5 @@
 package bh.manager.service.api
 
-import bh.manager.service.pojo.BillableDetail
 import io.vertx.codegen.annotations.Fluent
 import io.vertx.codegen.annotations.ProxyGen
 import io.vertx.codegen.annotations.VertxGen
@@ -32,5 +31,5 @@ interface ApiPersistService {
   fun findBillable(empId: String, handler: Handler<AsyncResult<JsonObject>>): ApiPersistService
 
   @Fluent
-  fun addBillable(detail: BillableDetail, handler: Handler<AsyncResult<JsonObject>>): ApiPersistService
+  fun addBillable(detailJson: JsonObject, handler: Handler<AsyncResult<JsonObject>>): ApiPersistService
 }

@@ -1,4 +1,4 @@
-package bh.manager.http
+package bh.manager.service.base
 
 import io.vertx.core.*
 import io.vertx.core.logging.Logger
@@ -14,8 +14,8 @@ import io.vertx.ext.web.handler.SessionHandler
 import io.vertx.ext.web.sstore.LocalSessionStore
 
 
-class BaseRestVerticle : AbstractVerticle() {
-  private val logger: Logger = LoggerFactory.getLogger(javaClass)
+open class BaseRestVerticle : BaseMicroServiceVerticle() {
+  private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
   /**
    * @param router microservice router
@@ -80,6 +80,7 @@ class BaseRestVerticle : AbstractVerticle() {
         ar.cause().printStackTrace()
       }
   }}
+
 
   // helper method dealing with failure
 
