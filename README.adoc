@@ -1,6 +1,6 @@
 = Billable-hour-man
 
-image:https://img.shields.io/badge/vert.x-3.9.2-purple.svg[link="https://vertx.io"]
+This Build is using image:https://img.shields.io/badge/vert.x-3.9.2-purple.svg[link="https://vertx.io"]
 
 ## Content
 - Rest services
