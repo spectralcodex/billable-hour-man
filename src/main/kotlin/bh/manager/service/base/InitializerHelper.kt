@@ -33,8 +33,7 @@ class InitializerHelper : AbstractVerticle() {
 */
     val dataInit = listOf(
       "insert into tb_emp_project values ('23qwe', '1', 300, 'MTN', '2019-08-01', '09:00', '17:00', '8')",
-      "insert into tb_emp_project values ('43wee', '1', 300, 'Fidelity', '2019-08-02', '09:00', '14:00', '5')",
-      "insert into tb_emp_project values ('s23fd', '1', 300, 'Julius Berger', '2019-08-02', '15:00', '17:00', '2')")
+      "insert into tb_emp_project values ('43wee', '1', 300, 'Fidelity', '2019-08-02', '09:00', '14:00', '5')")
 
 
     var dbClient: JDBCClient = JDBCClient.createShared(vertx, ConfigHelper.loadConfig())

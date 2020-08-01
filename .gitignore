@@ -180,4 +180,7 @@ gradle-app.setting
 !.vscode/extensions.json
 
 ### Database files ###
+db/*
 
+### generate files ###
+/src/main/generated/
