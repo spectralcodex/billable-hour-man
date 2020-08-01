@@ -1,8 +1,8 @@
 = Billable-hour-man
 
 image:https://img.shields.io/badge/vert.x-3.9.2-purple.svg[link="https://vertx.io"]
-## Content
 
+## Content
 - Rest services
 - Asynchronous development model
 - Reactive and functional patterns
@@ -15,7 +15,7 @@ image:https://img.shields.io/badge/vert.x-3.9.2-purple.svg[link="https://vertx.i
 
 ## Documentation
 
-== Building
+### Building
 
 To launch your tests:
 ```
@@ -32,7 +32,7 @@ To run your application:
 ./mvnw clean compile exec:java
 ```
 
-== Help
+### Help
 Note https required
 
 Rest API running on port 9999, below is a ping call
@@ -50,7 +50,7 @@ GET: https://localhost:8888
 ```
 
 
-== API doc
+== API documentation
 * https://documenter.getpostman.com/view/1855568/T1Dv8aH7[Postman Doc]
 
 
