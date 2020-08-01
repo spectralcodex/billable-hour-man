@@ -7,10 +7,8 @@ image:https://img.shields.io/badge/vert.x-3.9.2-purple.svg[link="https://vertx.i
 - Asynchronous development model
 - Reactive and functional patterns
 - Event sourcing patterns
-- Asynchronous RPC on the clustered event bus
-- Various type of services (e.g. REST, message source, event bus service)
+- Various type of services (e.g. REST, event bus service)
 - Service discovery
-- Polyglot persistence support
 - Employee and Finance UI for administration
 
 ## Documentation
