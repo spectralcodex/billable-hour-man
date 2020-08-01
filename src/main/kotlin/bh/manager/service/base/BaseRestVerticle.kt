@@ -18,7 +18,10 @@ import io.vertx.ext.web.handler.CorsHandler
 import io.vertx.ext.web.handler.SessionHandler
 import io.vertx.ext.web.sstore.LocalSessionStore
 
-
+/*
+* Base verticle to create blueprint for REST APIs by providing
+*  several helper methods for REST API.
+* */
 open class BaseRestVerticle : BaseMicroServiceVerticle() {
   private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
@@ -38,6 +41,7 @@ open class BaseRestVerticle : BaseMicroServiceVerticle() {
   }
 
   /**
+   * http support
    * @param router router instance
    */
   fun enableCorsSupport(router: Router) {
@@ -87,7 +91,15 @@ open class BaseRestVerticle : BaseMicroServiceVerticle() {
     }
   }
 
-
+  /**
+   * This method generates handler for async methods in REST APIs.
+   * The result requires raw. If empty, return <em>503 Service not available</em> status.
+   * The content type is JSON.
+   *
+   * @param context routing context instance
+   * @param <T>     result type
+   * @return generated handler
+   */
   fun <T> rawResultHandler(context: RoutingContext): Handler<AsyncResult<T>> {
     return Handler { ar ->
       if (ar.succeeded()) {

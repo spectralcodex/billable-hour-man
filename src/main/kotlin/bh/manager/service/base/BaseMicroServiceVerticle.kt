@@ -18,6 +18,7 @@ open class BaseMicroServiceVerticle :  AbstractVerticle(){
 
 
   override fun start() {
+    // init service discovery instance
     discovery = ServiceDiscovery.create(vertx, ServiceDiscoveryOptions().setBackendConfiguration(config()))
   }
 
@@ -27,15 +28,15 @@ open class BaseMicroServiceVerticle :  AbstractVerticle(){
    * @param name resource name
    * @param host resource host
    * @param port resource port
-   * @return jooq.async result
+   * @return async result
    */
-  protected fun publishHttpEndpoint(name:String,  host: String, port:Int):Future<Void> {
+   fun publishHttpEndpoint(name:String,  host: String, port:Int):Future<Void> {
     var record:Record = HttpEndpoint.createRecord(name, host, port, "/",
      JsonObject().put("api.name", config().getString("api.name", "")))
     return publish(record)
   }
 
-  protected  fun publishEventBusService(name:String,  address: String,  serviceClass: Class<Any>):Future<Void> {
+  fun publishEventBusService(name:String,  address: String,  serviceClass: Class<Any>):Future<Void> {
     var record: Record = EventBusService.createRecord(name, address, serviceClass)
     return publish(record)
   }

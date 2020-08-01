@@ -11,7 +11,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="/timesheet">
+            <a class="nav-link" href="/timesheet">
               <span data-feather="bar-chart-2"></span>
               Timesheet
             </a>

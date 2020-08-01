@@ -42,7 +42,7 @@ internal class RestVerticle (service: PersistProxyService): BaseRestVerticle(){
     router.mountSubRouter("/api", apiRouter)
 
     val host: String = config().getString("service.http.address", "0.0.0.0")
-    val port: Int = config().getInteger("service.http.port", 8082)
+    val port: Int = config().getInteger("service.http.port", 9999)
 
     //Create Http Server and publish endpoint for discovery
     createHttpServer(router, host, port)
