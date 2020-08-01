@@ -16,6 +16,7 @@ local.properties
 .recommenders
 
 # External tool builders
+# External tool builders
 .externalToolBuilders/
 
 # Locally stored "Eclipse launch configurations"
@@ -169,13 +170,7 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
-### NetBeans ###
-nbproject/private/
-buildTool/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
+
 
 ### VisualStudioCode ###
 .vscode/*
