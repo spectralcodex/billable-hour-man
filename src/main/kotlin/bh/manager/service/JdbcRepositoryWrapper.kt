@@ -89,7 +89,7 @@ open class JdbcRepositoryWrapper(vertx: Vertx, config: JsonObject) {
 
   /**
    * @param param Json array param
-   * @param sql   callable statement of pgsql function
+   * @param sql   sql query
    * @return a list of json objects
    */
   protected fun retrieveMany(param: JsonArray, sql: String): Future<List<JsonObject>> {

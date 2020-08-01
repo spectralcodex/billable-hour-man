@@ -23,20 +23,21 @@ class ApiPersistServiceVerticle: BaseMicroServiceVerticle(){
 
     // register the service proxy on event bus
     ProxyHelper.registerService(PersistProxyService::class.java, vertx, persistService, SERVICE_ADDRESS)
-    //initBillableHourDatabase(persistService)
+
+    //publish service for discovery
     publishEventBusService(SERVICE_NAME, SERVICE_ADDRESS, ApiPersistService::class.java)
       .compose{deployRestService(persistService)}
       .onComplete(startPromise)
 
   }
 
-  /*private fun deployInitializePeristence(): Future<Void>{
+  private fun deployInitializePeristence(): Future<Void>{
     val promise: Promise<String> = Promise.promise()
     vertx.deployVerticle(InitializerHelper(),
       DeploymentOptions().setConfig(config()),
       promise)
     return promise.future().map{null}
-  }*/
+  }
 
   private fun deployRestService(service: PersistProxyService): Future<Void> {
     val promise: Promise<String> = Promise.promise()

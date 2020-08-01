@@ -16,12 +16,12 @@
               Invoice
             </a>
           </li>
-          <li class="nav-item">
+          <!--<li class="nav-item">
             <a class="nav-link" href="/#">
               <span data-feather="bar-chart-2"></span>
               Report
             </a>
-          </li>
+          </li>-->
         </ul>
       </div>
     </nav>

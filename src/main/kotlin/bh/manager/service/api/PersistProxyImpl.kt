@@ -13,6 +13,10 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
+
+/*
+* ProxyService Implementation
+* */
 internal class PersistProxyImpl : JdbcRepositoryWrapper, PersistProxyService {
   private val sqlQueries = ConfigHelper.loadSqlQueries()
 

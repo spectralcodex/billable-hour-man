@@ -2,15 +2,15 @@ package bh.manager.service.api
 
 import bh.manager.service.base.BaseRestVerticle
 import bh.manager.service.ui.UiHandler
-import io.vertx.core.Handler
 import io.vertx.core.Promise
-import io.vertx.core.json.JsonObject
-import io.vertx.core.logging.LoggerFactory
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.ext.web.handler.StaticHandler
 
+/*
+* Finance REST
+* */
 internal class AdminHttpServerVerticle(service: PersistProxyService): BaseRestVerticle() {
   private val service: PersistProxyService = service
   private val  serviceName:String = "billable-admin-api"

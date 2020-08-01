@@ -84,8 +84,8 @@ $(document).ready(function () {
         projectName: $('#txt-project-name').val(),
         projectDate: $('#txt-project-date').val(),
         startTime: $('#txt-start-date').val(),
-        endTime: $('#txt-end-date').val(),
-        workDuration: ""
+        endTime: $('#txt-end-date').val()
+
       };
 
       console.log(obj)
@@ -115,6 +115,10 @@ $(document).ready(function () {
 
   $('#time-csv').on('click',function(){
     $("#tb-timesheet").tableHTMLExport({type:'csv',filename:'timesheet.csv'});
+  })
+
+  $('#time-json').on('click',function(){
+    $("#tb-timesheet").tableHTMLExport({type:'json',filename:'timesheet.json'});
   })
 
   $('#fcsv').on('click',function(){

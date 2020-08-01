@@ -41,7 +41,8 @@ open class BaseRestVerticle : BaseMicroServiceVerticle() {
   }
 
   /**
-   * http support
+   * Enable CORS support.
+   *
    * @param router router instance
    */
   fun enableCorsSupport(router: Router) {

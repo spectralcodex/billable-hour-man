@@ -11,6 +11,9 @@ import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.ext.web.handler.StaticHandler
 
+/*
+* Employee Rest (Generic)
+* */
 internal class RestVerticle (service: PersistProxyService): BaseRestVerticle(){
   private val logger = LoggerFactory.getLogger(this::class.java)
   private val service: PersistProxyService = service
@@ -31,11 +34,12 @@ internal class RestVerticle (service: PersistProxyService): BaseRestVerticle(){
     router.get("/").handler(uiHandler::indexHandler)
     router.get("/project").handler(uiHandler::projectHandler)
     router.get("/timesheet").handler(uiHandler::timeSheetHandler)
-    router.get("/version").handler { ctx -> ctx.response().putHeader("Content-Type", "application/json")
-      ctx.response().end(JsonObject().put("message", "Billable Hour Rest version 0.1").encode())
-    }
+
 
     val apiRouter: Router = Router.router(vertx)
+    apiRouter.get("/version").handler { ctx -> ctx.response().putHeader("Content-Type", "application/json")
+      ctx.response().end(JsonObject().put("message", "Billable Hour Rest version 0.1").encode())
+    }
     apiRouter.post("/add").handler(this::apiAdd)
     apiRouter.post("/all").handler(this::apiRetrieveAll)
     apiRouter.post("/:empId").handler(this::apiRetrieveById)
@@ -72,7 +76,6 @@ internal class RestVerticle (service: PersistProxyService): BaseRestVerticle(){
 
   private fun apiRetrieveById(context: RoutingContext){
     var employeeId = context.request().getParam("empId")
-    //logger.info("!!!!!!!!!!!!!!!!!!!$employeeId")
     service.findBillable(employeeId, resultHandlerNonEmpty(context))
   }
 

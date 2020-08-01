@@ -40,9 +40,9 @@
               CSV
             </button>
           </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='/timesheet'">
-            <span data-feather="bar-chart-2"></span>
-            Timesheet
+          <button type="button" class="btn btn-sm btn-outline-secondary" id="time-json">
+            <span data-feather="download"></span>
+            JSON
           </button>
         </div>
       </div>

@@ -16,9 +16,11 @@ class FinanceServiceVerticle : AbstractVerticle(){
 
     // create the service instance
     val persistService: PersistProxyService = PersistProxyImpl(vertx, config())
+
     // register the service proxy on event bus
     //ProxyHelper.registerService(PersistProxyService::class.java, vertx, persistService, PersistProxyService.SERVICE_ADDRESS)
 
+    //No need to register service since they all use the same proxy
     initBillableHourDatabase(persistService)
       .compose{deployRestService(persistService)}
       .onComplete(startPromise)
