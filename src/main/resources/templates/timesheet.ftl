@@ -5,7 +5,7 @@
       <div class="sidebar-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" href="/">
+            <a class="nav-link" href="/">
               <span data-feather="home"></span>
               Dashboard <span class="sr-only">(current)</span>
             </a>
@@ -28,13 +28,15 @@
 
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
+        <h1 class="h2">TimeSheet</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group mr-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-project-page" onclick="location.href='/project'"><span data-feather="file"></span>
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-project-page"
+                    onclick="location.href='/project'"><span data-feather="file"></span>
               Add
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" id="csv"> <span data-feather="download"></span>
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="time-csv"><span
+                      data-feather="download"></span>
               CSV
             </button>
           </div>
@@ -45,11 +47,12 @@
         </div>
       </div>
 
+
       <!--<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>-->
 
-      <h6>Billable Projects</h6>
+      <h6>Time Sheet</h6>
       <div class="table-responsive">
-        <table class="table table-striped table-sm" id="tb-records" >
+        <table class="table table-striped table-sm" id="tb-timesheet">
           <thead>
           <tr>
             <th>Employee ID</th>
@@ -65,6 +68,18 @@
           <tbody>
 
           </tbody>
+         <tfoot>
+          <tr>
+            <th>Total</th>
+            <th><div style="display: flex; justify-content: flex-end"><div id="sumRate"></div></div></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th><div style="display: flex; justify-content: flex-end"><div id="sumDuration"></div></div></th>
+            <th><div style="display: flex; justify-content: flex-end"><div id="sumTotal"></div></div></th>
+          </tr>
+          </tfoot>
         </table>
       </div>
     </main>
@@ -78,3 +93,4 @@
 </footer>
 
 <#include "footer.ftl">
+

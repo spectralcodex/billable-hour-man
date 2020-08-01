@@ -1,13 +1,18 @@
 package bh.manager.service.base
 
-import io.vertx.core.*
+import io.vertx.core.AsyncResult
+import io.vertx.core.Future
+import io.vertx.core.Handler
+import io.vertx.core.Promise
+import io.vertx.core.http.CookieSameSite
+import io.vertx.core.http.HttpMethod
+import io.vertx.core.http.HttpServer
+import io.vertx.core.http.HttpServerOptions
+import io.vertx.core.json.JsonObject
 import io.vertx.core.logging.Logger
 import io.vertx.core.logging.LoggerFactory
-import io.vertx.core.http.CookieSameSite
-import io.vertx.core.http.HttpServer
+import io.vertx.core.net.JksOptions
 import io.vertx.ext.web.Router
-import io.vertx.core.http.HttpMethod;
-import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.CorsHandler
 import io.vertx.ext.web.handler.SessionHandler
@@ -25,7 +30,8 @@ open class BaseRestVerticle : BaseMicroServiceVerticle() {
    */
   fun createHttpServer(router: Router, host: String, port: Int): Future<Unit> {
     val httpServerPromise: Promise<HttpServer> = Promise.promise()
-    vertx.createHttpServer()
+    vertx.createHttpServer(HttpServerOptions().setSsl(true)
+      .setKeyStoreOptions(JksOptions().setPath("server-keystore.jks").setPassword("secr3t")))
       .requestHandler(router)
       .listen(port, host, httpServerPromise)
     return httpServerPromise.future().map { null }
@@ -69,28 +75,72 @@ open class BaseRestVerticle : BaseMicroServiceVerticle() {
   }
 
   //Helper methods for REST API {PUT,GET,POST} calls
-
-   fun <T> resultHandler(context: RoutingContext,  handler: Handler<T>):Handler<AsyncResult<T>> {
+  fun <T> resultHandler(context: RoutingContext, handler: Handler<T>): Handler<AsyncResult<T>> {
     return Handler { ar ->
       if (ar.succeeded()) {
         handler.handle(ar.result())
       } else {
-        logger.error(ar.cause());
+        logger.error(ar.cause())
         internalError(context, ar.cause())
         ar.cause().printStackTrace()
       }
-  }}
+    }
+  }
+
+
+  fun <T> rawResultHandler(context: RoutingContext): Handler<AsyncResult<T>> {
+    return Handler { ar ->
+      if (ar.succeeded()) {
+        //logger.info("Fetch Result::::${ar.result()}")
+        var res: T = ar.result()
+        if (res == null) serviceUnavailable(context, "invalid_result")
+        else {
+          context.response()
+            .putHeader("content-type", "application/json")
+            .end(res?.toString())
+        }
+      } else {
+        internalError(context, ar.cause())
+        ar.cause().printStackTrace()
+      }
+    }
+  }
+
+  /**
+   * This method generates handler for async methods in REST APIs.
+   * The result requires non-empty. If empty, return <em>404 Not Found</em> status.
+   * The content type is JSON.
+   *
+   * @param context routing context instance
+   * @param <T>     result type
+   * @return generated handler
+   */
+  protected fun <T> resultHandlerNonEmpty(context: RoutingContext): Handler<AsyncResult<T>> {
+    return Handler { ar ->
+      if (ar.succeeded()) {
+        val res = ar.result()
+        if (res == null) notFound(context) else {
+          context.response()
+            .putHeader("content-type", "application/json")
+            .end(res?.toString())
+        }
+      } else {
+        internalError(context, ar.cause())
+        ar.cause().printStackTrace()
+      }
+    };
+  }
 
 
   // helper method dealing with failure
 
-   fun internalError(context: RoutingContext,  ex: Throwable) {
+  fun internalError(context: RoutingContext, ex: Throwable) {
     context.response().setStatusCode(500)
       .putHeader("content-type", "application/json")
       .end(JsonObject().put("error", ex.message).encodePrettily())
   }
 
-   fun notImplemented(context: RoutingContext) {
+  fun notImplemented(context: RoutingContext) {
     context.response().setStatusCode(501)
       .putHeader("content-type", "application/json")
       .end(JsonObject().put("message", "not_implemented").encodePrettily())
@@ -116,10 +166,10 @@ open class BaseRestVerticle : BaseMicroServiceVerticle() {
       .end(JsonObject().put("error", ex.message).encodePrettily())
   }
 
-  protected fun serviceUnavailable(context: RoutingContext,  cause: String) {
+  protected fun serviceUnavailable(context: RoutingContext, cause: String) {
     context.response().setStatusCode(503)
       .putHeader("content-type", "application/json")
-      .end( JsonObject().put("error", cause).encodePrettily())
+      .end(JsonObject().put("error", cause).encodePrettily())
   }
 
   protected fun badRequest(context: RoutingContext, ex: Throwable) {

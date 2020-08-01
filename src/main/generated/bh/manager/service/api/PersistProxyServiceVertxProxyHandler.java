@@ -126,12 +126,17 @@ public class PersistProxyServiceVertxProxyHandler extends ProxyHandler {
         }
         case "findBillable": {
           service.findBillable((java.lang.String)json.getValue("empId"),
-                        HelperUtils.createHandler(msg));
+                        HelperUtils.createListHandler(msg));
           break;
         }
         case "addBillable": {
           service.addBillable((io.vertx.core.json.JsonObject)json.getValue("json"),
                         HelperUtils.createHandler(msg));
+          break;
+        }
+        case "findBillableByCompany": {
+          service.findBillableByCompany((java.lang.String)json.getValue("company"),
+                        HelperUtils.createListHandler(msg));
           break;
         }
         default: throw new IllegalStateException("Invalid action: " + action);

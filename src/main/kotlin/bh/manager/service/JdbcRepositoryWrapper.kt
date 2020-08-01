@@ -6,6 +6,7 @@ import io.vertx.core.json.JsonObject
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.ext.jdbc.JDBCClient
 import io.vertx.ext.sql.SQLConnection
+import java.util.*
 
 /**
  * Helper and wrapper class for Jooq repository services
@@ -14,7 +15,7 @@ import io.vertx.ext.sql.SQLConnection
  */
 
 open class JdbcRepositoryWrapper(vertx: Vertx, config: JsonObject) {
-  val client: JDBCClient = JDBCClient.createShared(vertx, config).also { print(config) }
+  val client: JDBCClient = JDBCClient.createShared(vertx, config)
   private val logger = LoggerFactory.getLogger(this::class.java)
 
   /**
@@ -45,9 +46,9 @@ open class JdbcRepositoryWrapper(vertx: Vertx, config: JsonObject) {
    * @param sql           query
    * @param resultHandler results
    */
-  protected fun executeNoResult(params: JsonArray, sql: String, resultHandler: Handler<AsyncResult<Void>>) {
+  protected fun executeNoResult(params: JsonArray, sql: String?, resultHandler: Handler<AsyncResult<Void>>) {
     client.getConnection(connHandler(resultHandler, Handler { con ->
-      con.queryWithParams(sql, params) { r ->  //if returns then fix return json array
+      con.updateWithParams(sql, params) { r ->  //if returns then fix return json array
         if (r.succeeded()) {
           resultHandler.handle(Future.succeededFuture())
         } else {
@@ -58,16 +59,17 @@ open class JdbcRepositoryWrapper(vertx: Vertx, config: JsonObject) {
     }))
   }
 
-  protected fun <T> executeNoResult(t: T, sql: String, resultHandler: Handler<AsyncResult<Void>>) {
+  protected fun <T> executeNoResult(t: T, sql: String?, resultHandler: Handler<AsyncResult<Void>>) {
     client.getConnection(connHandler(resultHandler, Handler { con ->
+      //logger.info(sql)
       con.execute(sql) { r ->  //if returns then fix return json array
+        con.close()
         if (r.succeeded()) {
           resultHandler.handle(Future.succeededFuture())
           logger.info("Persist OK --> id:$t")
         } else {
           resultHandler.handle(Future.failedFuture(r.cause()))
         }
-        con.close()
       }
     }))
   }
@@ -96,7 +98,7 @@ open class JdbcRepositoryWrapper(vertx: Vertx, config: JsonObject) {
       //new JsonArray().add(t), new JsonArray().add("VARCHAR")
       con.queryWithParams(sql, param) { r ->
         if (r.succeeded()) {
-          promise.complete(r.result().getRows())
+          promise.complete(r.result().rows)
         } else {
           promise.fail(r.cause())
         }
@@ -110,16 +112,17 @@ open class JdbcRepositoryWrapper(vertx: Vertx, config: JsonObject) {
    * @param sql
    * @return future list of JsonObjects
    */
-  protected fun retrieveAll(sql: String): Future<List<JsonObject>> {
-    return getConnection().compose { con ->
-      val promise: Promise<List<JsonObject>> = Promise.promise()
+  protected fun retrieveAll(sql: String?): Future<List<JsonObject>> {
+    return getConnection().compose{ con ->
+      var promise: Promise<List<JsonObject>> = Promise.promise()
       con.query(sql) { r ->
+        con.close()
         if (r.succeeded()) {
-          promise.complete(r.result().getRows())
+          //logger.info(r.result().rows)
+          promise.complete(r.result().rows)
         } else {
           promise.fail(r.cause())
         }
-        con.close()
       }
       return@compose promise.future()
     }
@@ -141,5 +144,28 @@ open class JdbcRepositoryWrapper(vertx: Vertx, config: JsonObject) {
       return@compose promise.future()
     }
   }
+
+  protected fun <T>  retrieveOne(param: T, sql: String):Future<JsonObject> {
+    return getConnection()
+      .compose{ connection ->
+       val future: Promise<JsonObject> = Promise.promise()
+        logger.info(param)
+       connection.queryWithParams(sql, JsonArray().add(param)) { r ->
+         if (r.succeeded()) {
+           var resList:List<JsonObject>  = r.result().rows
+           logger.info(resList)
+           if (resList == null || resList.isEmpty()) {
+             future.complete(JsonObject())
+           } else {
+             future.complete(resList[0])
+           }
+         } else {//hello
+           future.fail(r.cause())
+         }
+         connection.close()
+       }
+        return@compose future.future()
+      }
+    }
 
 }

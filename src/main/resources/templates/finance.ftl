@@ -11,15 +11,15 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="/timesheet">
-              <span data-feather="bar-chart-2"></span>
-              Timesheet
+            <a class="nav-link" href="/invoice">
+              <span data-feather="shopping-cart"></span>
+              Invoice
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/project">
-              <span data-feather="file"></span>
-              Projects
+            <a class="nav-link" href="/#">
+              <span data-feather="bar-chart-2"></span>
+              Report
             </a>
           </li>
         </ul>
@@ -28,28 +28,28 @@
 
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
+        <h3 class="h3">Billable Insight</h3>
         <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group mr-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-project-page" onclick="location.href='/project'"><span data-feather="file"></span>
-              Add
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="fpdf"><span data-feather="file"></span>
+              JSON
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" id="csv"> <span data-feather="download"></span>
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="fcsv"> <span data-feather="download"></span>
               CSV
             </button>
           </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='/timesheet'">
-            <span data-feather="bar-chart-2"></span>
-            Timesheet
+          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='/invoice'">
+            <span data-feather="shopping-cart"></span>
+            Invoice
           </button>
         </div>
       </div>
 
       <!--<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>-->
 
-      <h6>Billable Projects</h6>
+
       <div class="table-responsive">
-        <table class="table table-striped table-sm" id="tb-records" >
+        <table class="table table-striped table-sm" id="tb-finance" >
           <thead>
           <tr>
             <th>Employee ID</th>
@@ -65,6 +65,18 @@
           <tbody>
 
           </tbody>
+          <tfoot>
+          <tr>
+            <th>Total</th>
+            <th><div style="display: flex; justify-content: flex-end"><div id="sumRate"></div></div></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th><div style="display: flex; justify-content: flex-end"><div id="sumDuration"></div></div></th>
+            <th><div style="display: flex; justify-content: flex-end"><div id="sumTotal"></div></div></th>
+          </tr>
+          </tfoot>
         </table>
       </div>
     </main>

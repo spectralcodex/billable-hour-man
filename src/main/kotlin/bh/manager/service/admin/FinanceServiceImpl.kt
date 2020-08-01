@@ -1,4 +1,6 @@
 package bh.manager.service.admin
 
-class FinanceServiceImpl {
-}
+import bh.manager.service.api.ApiPersistService
+
+
+class FinanceServiceImpl

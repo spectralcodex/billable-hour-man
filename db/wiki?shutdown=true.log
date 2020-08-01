@@ -1,0 +1,9 @@
+/*C5*/SET SCHEMA PUBLIC
+create table if not exists tb_emp_project (recId varchar(255),employeeId varchar(255), billableRate double, project varchar(255), projectDate varchar(255), startTime varchar(255), endTime varchar(255),workDuration integer)
+INSERT INTO TB_EMP_PROJECT VALUES('6a997d82-3c9b-4ec0-9daa-338a0b3719a0','ss',300.0E0,'Eprocess','2020-08-19','11:22','14:03',2)
+COMMIT
+DISCONNECT
+/*C7*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C6*/SET SCHEMA PUBLIC
+DISCONNECT

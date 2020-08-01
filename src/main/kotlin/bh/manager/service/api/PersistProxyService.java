@@ -6,7 +6,6 @@ import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
-import kotlin.Unit;
 
 import java.util.List;
 
@@ -33,8 +32,12 @@ interface PersistProxyService { //This a modified library and should not be touc
   PersistProxyService fetchAllBillable(Handler<AsyncResult<List<JsonObject>>> handler);
 
   @Fluent
-  PersistProxyService findBillable(String empId, Handler<AsyncResult<JsonObject>> handler);
+  PersistProxyService findBillable(String empId, Handler<AsyncResult<List<JsonObject>>> handler);
 
   @Fluent
-  PersistProxyService addBillable(JsonObject json,  Handler<AsyncResult<JsonObject>> handler);
+  PersistProxyService addBillable(JsonObject json,  Handler<AsyncResult<Void>> handler);
+
+  @Fluent
+  PersistProxyService findBillableByCompany(String company,  Handler<AsyncResult<List<JsonObject>>> handler);
+
 }

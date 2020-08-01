@@ -102,7 +102,7 @@ public class PersistProxyServiceVertxEBProxy implements PersistProxyService {
     return this;
   }
   @Override
-  public  PersistProxyService findBillable(String empId, Handler<AsyncResult<JsonObject>> handler){
+  public  PersistProxyService findBillable(String empId, Handler<AsyncResult<List<JsonObject>>> handler){
     if (closed) {
       handler.handle(Future.failedFuture(new IllegalStateException("Proxy is closed")));
       return this;
@@ -112,17 +112,17 @@ public class PersistProxyServiceVertxEBProxy implements PersistProxyService {
 
     DeliveryOptions _deliveryOptions = (_options != null) ? new DeliveryOptions(_options) : new DeliveryOptions();
     _deliveryOptions.addHeader("action", "findBillable");
-    _vertx.eventBus().<JsonObject>request(_address, _json, _deliveryOptions, res -> {
+    _vertx.eventBus().<JsonArray>request(_address, _json, _deliveryOptions, res -> {
       if (res.failed()) {
         handler.handle(Future.failedFuture(res.cause()));
       } else {
-        handler.handle(Future.succeededFuture(res.result().body()));
+        handler.handle(Future.succeededFuture(ProxyUtils.convertList(res.result().body().getList())));
       }
     });
     return this;
   }
   @Override
-  public  PersistProxyService addBillable(JsonObject json, Handler<AsyncResult<JsonObject>> handler){
+  public  PersistProxyService addBillable(JsonObject json, Handler<AsyncResult<Void>> handler){
     if (closed) {
       handler.handle(Future.failedFuture(new IllegalStateException("Proxy is closed")));
       return this;
@@ -132,11 +132,31 @@ public class PersistProxyServiceVertxEBProxy implements PersistProxyService {
 
     DeliveryOptions _deliveryOptions = (_options != null) ? new DeliveryOptions(_options) : new DeliveryOptions();
     _deliveryOptions.addHeader("action", "addBillable");
-    _vertx.eventBus().<JsonObject>request(_address, _json, _deliveryOptions, res -> {
+    _vertx.eventBus().<Void>request(_address, _json, _deliveryOptions, res -> {
       if (res.failed()) {
         handler.handle(Future.failedFuture(res.cause()));
       } else {
         handler.handle(Future.succeededFuture(res.result().body()));
+      }
+    });
+    return this;
+  }
+  @Override
+  public  PersistProxyService findBillableByCompany(String company, Handler<AsyncResult<List<JsonObject>>> handler){
+    if (closed) {
+      handler.handle(Future.failedFuture(new IllegalStateException("Proxy is closed")));
+      return this;
+    }
+    JsonObject _json = new JsonObject();
+    _json.put("company", company);
+
+    DeliveryOptions _deliveryOptions = (_options != null) ? new DeliveryOptions(_options) : new DeliveryOptions();
+    _deliveryOptions.addHeader("action", "findBillableByCompany");
+    _vertx.eventBus().<JsonArray>request(_address, _json, _deliveryOptions, res -> {
+      if (res.failed()) {
+        handler.handle(Future.failedFuture(res.cause()));
+      } else {
+        handler.handle(Future.succeededFuture(ProxyUtils.convertList(res.result().body().getList())));
       }
     });
     return this;

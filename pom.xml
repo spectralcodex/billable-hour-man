@@ -68,7 +68,7 @@
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.3.4</version>
+      <version>2.3.3</version>
     </dependency>
 
     <!-- Microservice toolbox -->
@@ -92,6 +92,7 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-web-templ-freemarker</artifactId>
+      <version>3.9.2</version>
     </dependency>
 
     <dependency>
